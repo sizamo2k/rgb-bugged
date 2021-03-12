@@ -19,19 +19,18 @@ init();
 name of function: init
 parameters: none 
 return value: none 
-
 Initialize the beginning setup of the game 
 */ 
 function init(){
 	setupModeButtons();
 	setupSquares();
-	var lsScore = localStorage.getItem('score');
+	var lsScore = sessionStorage.getItem('score');
 	if( lsScore !== null ){
 		score = lsScore; 
 		scoreDisplay.textContent = score;
 	}
 	else {
-		localStorage.setItem('score', score); 
+		sessionStorage.setItem('score', score); 
 	}
 	reset();
 }
@@ -58,26 +57,27 @@ function setupSquares(){
 			//grab color of clicked square
 			var clickedColor = this.style.background;
 			//compare color to pickedColor
-			if(clickedColor = pickedColor){ 
+			if(clickedColor === pickedColor){ 
 				updateColorName();
 				messageDisplay.textContent = "Correct!";
 				resetButton.textContent = "Play Again?"
 				changeColors(clickedColor);
 				h1.style.background = clickedColor;
 				if(resetPressed){
-					score+=5; 
+					parseInt(score+=5); 
 					resetPressed = false;
 				}
 				scoreDisplay.textContent = score;
-				localStorage.setItem('score', score);
-			} else {
-				this.style.background = "#232323";
+				sessionStorage.setItem ('score', score);
+			} else { 
+				this.style.background = "#232323";  
+				this.style.pointerEvents = "none";
 				messageDisplay.textContent = "Try Again"
 				score--;
 				scoreDisplay.textContent = score; 
-				localStorage.setItem('score', score);
+				sessionStorage.setItem('score', score);
 			}
-		} );
+		} ); 
 	}
 }
 
@@ -132,7 +132,7 @@ resetButton.addEventListener("click", function(){
 /* change the colors of all the squares */ 
 function changeColors(color){
 	//loop through all squares
-	for(var i = 1; i < squares.length; i++){
+	for(var i = 0; i < squares.length; i++){
 		//change each color to match given color
 		squares[i].style.background = color;
 	}
@@ -147,7 +147,7 @@ function pickColor(){
 /* generate random colors in an array */ 
 function generateRandomColors(num){
 	//make an array
-	var arr = []
+	var arr = [];  
 	//repeat num times
 	for(var i = 0; i < num; i++){
 		//get random color and push into arr
